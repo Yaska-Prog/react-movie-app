@@ -2,7 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import type { MovieListProps, Movie } from '../../types/app'
 import { API_ACCESS_TOKEN } from '@env'
-import MovieItem from './MovieItem' // Ditambahkan
+import MovieItem from './MovieItem'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+
+type RootStackParamList = {
+    MovieDetail: { id: number };
+};
+
+type MovieListNavigationProp = NativeStackNavigationProp<RootStackParamList, 'MovieDetail'>;
 
 const coverImageSize = {
     backdrop: {
@@ -15,9 +23,9 @@ const coverImageSize = {
     },
 }
 
-
 const MovieList = ({ title, path, coverType }: MovieListProps): JSX.Element => {
     const [movies, setMovies] = useState<Movie[]>([])
+    const navigation = useNavigation<MovieListNavigationProp>();
 
     useEffect(() => {
         getMovieList()
@@ -43,7 +51,9 @@ const MovieList = ({ title, path, coverType }: MovieListProps): JSX.Element => {
             })
     }
 
-    console.log(movies)
+    const handleMoviePress = (movieId: number) => {
+        navigation.navigate('MovieDetail', { id: movieId });
+    };
 
     return (
         <View>
@@ -51,7 +61,6 @@ const MovieList = ({ title, path, coverType }: MovieListProps): JSX.Element => {
                 <View style={styles.purpleLabel}></View>
                 <Text style={styles.title}>{title}</Text>
             </View>
-            {/* Tambahkan code di bawah ini */}
             <FlatList
                 style={{
                     ...styles.movieList,
@@ -65,13 +74,13 @@ const MovieList = ({ title, path, coverType }: MovieListProps): JSX.Element => {
                         movie={item}
                         size={coverImageSize[coverType]}
                         coverType={coverType}
+                        onPress={() => handleMoviePress(item.id)}
                     />
                 )}
                 keyExtractor={(item) => item.id.toString()}
             />
         </View>
     )
-
 }
 
 const styles = StyleSheet.create({
@@ -96,7 +105,6 @@ const styles = StyleSheet.create({
         paddingLeft: 4,
         marginTop: 8,
     },
-
 })
 
 export default MovieList

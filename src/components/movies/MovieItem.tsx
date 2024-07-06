@@ -5,15 +5,16 @@ import { LinearGradient } from 'expo-linear-gradient'
 import type { MovieItemProps } from '../../types/app'
 import { useNavigation, StackActions } from '@react-navigation/native'
 
-const MovieItem = ({ movie, size, coverType }: MovieItemProps): JSX.Element => {
-    const navigation = useNavigation()
+interface ExtendedMovieItemProps extends MovieItemProps {
+    onPress: () => void;
+}
+
+const MovieItem = ({ movie, size, coverType, onPress }: ExtendedMovieItemProps): JSX.Element => {
     const pushAction = StackActions.push('MovieDetail', { id: movie.id })
 
     return (
         <TouchableOpacity
-            onPress={() => {
-                navigation.dispatch(pushAction)
-            }}
+            onPress={onPress}
         >
 
             <ImageBackground
