@@ -10,6 +10,11 @@ export interface MovieItemProps {
     coverType: 'poster' | 'backdrop'
 }
 
+export type RootStackParamList = {
+    SearchScreen: undefined;
+    GenreResults: { id: number[] };
+    MovieDetail: { id: number };
+};
 
 export interface Movie {
     backdrop_path: string
